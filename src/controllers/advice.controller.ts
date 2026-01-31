@@ -73,3 +73,34 @@ export async function getAdviceById(req: Request, res: Response) {
     }
 
 }
+
+export async function deleteAdviceById(req: Request, res: Response) {
+
+    try {
+
+        await connect();
+
+        const id = req.params.id;
+        const result = await AdviceModel.findByIdAndDelete(id);
+
+        if (!result) {
+            res.status(404).json({ message: 'Advice not found' });
+            return;
+        }
+
+        res.json({
+            message: 'Advice deleted'
+        });
+        
+        
+    }
+
+    catch (error) {
+        res.status(500).json({ message: 'Error updating advice by ID', error });
+    }
+
+    finally {
+        await disconnect();
+    }
+
+}
