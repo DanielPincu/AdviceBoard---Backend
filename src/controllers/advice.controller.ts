@@ -22,3 +22,27 @@ export async function getAllAdvices(req: Request, res: Response) {
     }
 
 }
+
+export async function postAdvice(req: Request, res: Response): Promise<void> {
+
+    const data = req.body;
+
+    try {
+
+        await connect();
+
+        const advice = new AdviceModel(data);
+        const result = await advice.save();
+        
+        res.status(201).json({ message: 'Advice posted successfully', advice: result });
+    }
+
+    catch (error) {
+        res.status(500).json({ message: 'Error posting advice', error });
+    }
+
+    finally {
+        await disconnect();
+    }
+
+}
