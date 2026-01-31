@@ -15,14 +15,4 @@ routes.delete('/advice/:id', deleteAdviceById);
 routes.put('/advice/:id', updateAdviceById);
 
 
-
-
-
-
-
-
-
-
-
-
 export default routes;
