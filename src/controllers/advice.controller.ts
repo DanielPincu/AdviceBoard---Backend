@@ -34,7 +34,7 @@ export async function postAdvice(req: Request, res: Response): Promise<void> {
         const advice = new AdviceModel(data);
         const result = await advice.save();
         
-        res.status(201).json({ message: 'Advice posted successfully', advice: result });
+        res.status(201).json(result);
     }
 
     catch (error) {
