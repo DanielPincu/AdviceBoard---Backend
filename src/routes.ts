@@ -11,7 +11,7 @@ import {
 
 const routes: Router = Router();
 
-routes.post('/advice', postAdvice);
+routes.post('/advices', postAdvice);
 routes.get('/advices', getAllAdvices);
 routes.get('/advices/:id', getAdviceById);
 routes.delete('/advices/:id', deleteAdviceById);
