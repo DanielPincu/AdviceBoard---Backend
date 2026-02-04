@@ -10,9 +10,9 @@ const routes: Router = Router();
 
 routes.post('/advice', postAdvice);
 routes.get('/advices', getAllAdvices);
-routes.get('/advice/:id', getAdviceById);
-routes.delete('/advice/:id', deleteAdviceById);
-routes.put('/advice/:id', updateAdviceById);
+routes.get('/advices/:id', getAdviceById);
+routes.delete('/advices/:id', deleteAdviceById);
+routes.put('/advices/:id', updateAdviceById);
 
 
 export default routes;
