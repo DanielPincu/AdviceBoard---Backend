@@ -11,7 +11,7 @@ const app: Application = express();
 
 function setupCors() {
     app.use(cors({
-        origin: '*',
+        origin: (origin, callback) => callback(null, true),
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         allowedHeaders: ['auth-token', 'Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
         credentials: true,
@@ -19,7 +19,7 @@ function setupCors() {
 }
 
 
-export function startServer() {
+export async function startServer() {
 
     setupCors();
 
@@ -27,13 +27,27 @@ export function startServer() {
 
     app.use('/api', routes);
 
-    connect();
+    await connect();
 
     const PORT: number = parseInt(process.env.PORT as string);
-    app.listen(process.env.PORT, function(){
-        console.log("Server is running on port: " + process.env.PORT);
-    })
+    app.listen(PORT, function () {
+        console.log("Server is running on port: " + PORT);
+    });
 
-    disconnect();
+    process.on('SIGINT', async () => {
+        try {
+            await disconnect();
+        } finally {
+            process.exit(0);
+        }
+    });
+
+    process.on('SIGTERM', async () => {
+        try {
+            await disconnect();
+        } finally {
+            process.exit(0);
+        }
+    });
 
 }
