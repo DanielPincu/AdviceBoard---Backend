@@ -253,3 +253,54 @@ export async function deleteReplyById(req: Request, res: Response) {
     res.status(500).json({ message: 'Error deleting reply' })
   }
 }
+
+export async function updateReplyById(req: Request, res: Response) {
+  try {
+    const rawAdviceId = req.params.adviceId
+    const rawReplyId = req.params.replyId
+    const adviceId = Array.isArray(rawAdviceId) ? rawAdviceId[0] : rawAdviceId
+    const replyId = Array.isArray(rawReplyId) ? rawReplyId[0] : rawReplyId
+
+    const userId = getUserId(req)
+    const { content, anonymous } = req.body
+
+    if (typeof content !== 'string' && typeof anonymous !== 'boolean') {
+      res.status(400).json({ message: 'Nothing to update' })
+      return
+    }
+
+    const advice = await adviceModel.findById(adviceId)
+
+    if (!advice) {
+      notFound(res, 'Advice not found')
+      return
+    }
+
+    const reply = (advice.replies as any).id(replyId)
+
+    if (!reply) {
+      res.status(404).json({ message: 'Reply not found' })
+      return
+    }
+
+    if (!reply._createdBy || String(reply._createdBy) !== String(userId)) {
+      forbidden(res, 'You can only edit your own reply')
+      return
+    }
+
+    if (typeof content === 'string') reply.content = content
+    if (typeof anonymous === 'boolean') reply.anonymous = anonymous
+
+    await advice.save()
+
+    const populated = await findAndPopulateAdvice(advice._id)
+    res.status(200).json(sanitizeAdvice(populated))
+  } catch (error: any) {
+    if (error?.name === 'ValidationError') {
+      res.status(400).json({ message: 'Validation failed', errors: error.errors })
+      return
+    }
+    console.error('updateReplyById error:', error)
+    res.status(500).json({ message: 'Error updating reply' })
+  }
+}

@@ -6,7 +6,8 @@ import {
     deleteAdviceById, 
     updateAdviceById,
     addReply,
-    deleteReplyById
+    deleteReplyById,
+    updateReplyById
 } from './controllers/advice.controller'
 import { registerUser, loginUser } from './controllers/auth.controller'
 import { verifyToken } from './middleware/auth.middleware'
@@ -29,6 +30,7 @@ routes.put('/advices/:id', verifyToken, updateAdviceById);
 // Replies (protected)
 routes.post('/advices/:id/replies', verifyToken, addReply);
 routes.delete('/advices/:adviceId/replies/:replyId', verifyToken, deleteReplyById);
+routes.put('/advices/:adviceId/replies/:replyId', verifyToken, updateReplyById);
 
 
 export default routes;
