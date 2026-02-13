@@ -6,4 +6,5 @@ export interface Reply {
   createdAt: Date;
   anonymous: boolean;
   _createdBy?: User['id'] | { _id: User['id']; username: string };
+  _isMine?: boolean;
 }

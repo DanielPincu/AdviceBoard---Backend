@@ -18,9 +18,9 @@ const routes: Router = Router();
 routes.post('/user/register', registerUser);
 routes.post('/user/login', loginUser);
 
-// Advices (public)
-routes.get('/advices', getAllAdvices);
-routes.get('/advices/:id', getAdviceById);
+// Advices (protected)
+routes.get('/advices', verifyToken, getAllAdvices);
+routes.get('/advices/:id', verifyToken, getAdviceById);
 
 // Advices (protected)
 routes.post('/advices', verifyToken, postAdvice);
