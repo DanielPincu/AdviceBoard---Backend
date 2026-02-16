@@ -261,6 +261,146 @@ export const swaggerSpec: OpenAPIV3.Document = {
       },
     },
 
+    '/advices/mine': {
+      get: {
+        tags: ['Advices'],
+        summary: 'Get my advices',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: {
+            description: 'List of my advices',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      _id: { type: 'string' },
+                      title: { type: 'string' },
+                      content: { type: 'string' },
+                      anonymous: { type: 'boolean' },
+                      _createdBy: {
+                        oneOf: [
+                          { type: 'string' },
+                          {
+                            type: 'object',
+                            properties: {
+                              _id: { type: 'string' },
+                              username: { type: 'string' },
+                            },
+                          },
+                        ],
+                      },
+                      createdAt: { type: 'string', format: 'date-time' },
+                      replies: {
+                        type: 'array',
+                        items: {
+                          type: 'object',
+                          properties: {
+                            _id: { type: 'string' },
+                            content: { type: 'string' },
+                            createdAt: { type: 'string', format: 'date-time' },
+                            anonymous: { type: 'boolean' },
+                            _createdBy: {
+                              oneOf: [
+                                { type: 'string' },
+                                {
+                                  type: 'object',
+                                  properties: {
+                                    _id: { type: 'string' },
+                                    username: { type: 'string' },
+                                  },
+                                },
+                              ],
+                            },
+                            _isMine: { type: 'boolean' },
+                          },
+                        },
+                      },
+                      _isMine: { type: 'boolean' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          401: { description: 'Not authenticated' },
+        },
+      },
+    },
+
+    '/users/{userId}/advices': {
+      get: {
+        tags: ['Advices'],
+        summary: 'Get advices by user',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'userId', in: 'path', required: true, schema: { type: 'string' } },
+        ],
+        responses: {
+          200: {
+            description: 'List of advices by user',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      _id: { type: 'string' },
+                      title: { type: 'string' },
+                      content: { type: 'string' },
+                      anonymous: { type: 'boolean' },
+                      _createdBy: {
+                        oneOf: [
+                          { type: 'string' },
+                          {
+                            type: 'object',
+                            properties: {
+                              _id: { type: 'string' },
+                              username: { type: 'string' },
+                            },
+                          },
+                        ],
+                      },
+                      createdAt: { type: 'string', format: 'date-time' },
+                      replies: {
+                        type: 'array',
+                        items: {
+                          type: 'object',
+                          properties: {
+                            _id: { type: 'string' },
+                            content: { type: 'string' },
+                            createdAt: { type: 'string', format: 'date-time' },
+                            anonymous: { type: 'boolean' },
+                            _createdBy: {
+                              oneOf: [
+                                { type: 'string' },
+                                {
+                                  type: 'object',
+                                  properties: {
+                                    _id: { type: 'string' },
+                                    username: { type: 'string' },
+                                  },
+                                },
+                              ],
+                            },
+                            _isMine: { type: 'boolean' },
+                          },
+                        },
+                      },
+                      _isMine: { type: 'boolean' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+
     '/advices/search': {
       get: {
         tags: ['Advices'],
