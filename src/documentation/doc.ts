@@ -261,6 +261,86 @@ export const swaggerSpec: OpenAPIV3.Document = {
       },
     },
 
+    '/advices/search': {
+      get: {
+        tags: ['Advices'],
+        summary: 'Search advices',
+        description: 'Search advices by free-text (q) or by field (key + value). Supports regex search for strings. Supported keys: title, content, anonymous.',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: 'q',
+            in: 'query',
+            required: false,
+            description: 'Free-text search across title and content',
+            schema: { type: 'string' },
+            example: 'Blue screen of death',
+          },
+          {
+            name: 'key',
+            in: 'query',
+            required: false,
+            description: 'Field to search by (title | content | anonymous)',
+            schema: { type: 'string', enum: ['title', 'content', 'anonymous'] },
+            example: 'title',
+          },
+          {
+            name: 'value',
+            in: 'query',
+            required: false,
+            description: 'Value for the selected field. Strings use case-insensitive regex.',
+            schema: { oneOf: [{ type: 'string' }, { type: 'boolean' }] },
+            example: 'true if key=anonymous, otherwise a regex string like "focus"',
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Search results',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'array',
+                  items: { $ref: '#/components/schemas/Advice' },
+                },
+                examples: {
+                  byQuery: {
+                    summary: 'Free-text search',
+                    value: [
+                      {
+                        _id: '698f44ea9624956d10975213',
+                        title: 'How to stay focused',
+                        content: 'One step at a time.',
+                        anonymous: false,
+                        _createdBy: { _id: '698da4852b8d89093e02c4ac', username: 'Daniel' },
+                        createdAt: '2026-02-16T09:06:32.209Z',
+                        replies: [],
+                        _isMine: true
+                      }
+                    ]
+                  },
+                  byField: {
+                    summary: 'Field search (anonymous=true)',
+                    value: [
+                      {
+                        _id: '698f4977a2044f975f47581d',
+                        title: 'How to stay focused',
+                        content: 'One step at a time.',
+                        anonymous: true,
+                        createdAt: '2026-02-13T15:55:35.807Z',
+                        replies: [],
+                        _isMine: false
+                      }
+                    ]
+                  }
+                }
+              },
+            },
+          },
+          400: { description: 'Invalid search parameters' },
+        },
+      },
+    },
+
     '/advices/{id}': {
       get: {
         tags: ['Advices'],
