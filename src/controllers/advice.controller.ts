@@ -318,8 +318,14 @@ export async function deleteReplyById(req: Request, res: Response) {
       return
     }
 
-    if (!reply._createdBy || String(reply._createdBy) !== String(userId)) {
-      forbidden(res, 'You can only delete your own reply')
+    const isReplyOwner =
+      reply._createdBy && String(reply._createdBy) === String(userId)
+
+    const isAdviceOwner =
+      advice._createdBy && String(advice._createdBy) === String(userId)
+
+    if (!isReplyOwner && !isAdviceOwner) {
+      forbidden(res, 'You can only delete your own reply or replies on your own advice')
       return
     }
 
