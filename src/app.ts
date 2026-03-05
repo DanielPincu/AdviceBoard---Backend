@@ -17,11 +17,24 @@ function setupCors() {
 
     app.use(cors({
         origin: (origin, cb) => {
-            if (!origin || origins.includes(origin)) {
-                cb(null, true);
-            } else {
-                cb(new Error('Not allowed by CORS'));
+            console.log('CORS request origin:', origin);
+
+            if (!origin) {
+                return cb(null, true);
             }
+
+            const serverOrigin = `http://localhost:${process.env.PORT}`;
+
+            if (
+                origins.includes(origin) ||
+                origin === serverOrigin ||
+                origin.endsWith('.onrender.com')
+            ) {
+                return cb(null, true);
+            }
+
+            console.log('CORS blocked origin:', origin);
+            return cb(null, false);
         },
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
